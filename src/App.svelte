@@ -5,15 +5,15 @@
   const keyboardRows = USEnglish;
 </script>
 
-<main>
-  <h1 class="text-4xl text-center">keyfinder</h1>
-  <div id="keyboard" class="flex flex-col items-center space-y-2">
+<main class="grid place-items-center min-h-screen font-mono">
+  <div class="inline-flex flex-col gap-y-1">
+    <h1 class="text-4xl">keyfinder</h1>
     {#each keyboardRows as row}
-      <div class="flex space-x-2">
+      <div class="flex justify-between gap-x-1">
         {#each row as key}
           <div
-            class="py-2 bg-gray-100 rounded text-center cursor-pointer"
-            style="width: {key.length * 50}px;"
+            class="p-4 bg-gray-100 rounded text-center first:text-left last:text-right text-s cursor-pointer hover:outline"
+            style="width: {key.length * 70}px;"
             id={key.id}
           >
             {key.name}
