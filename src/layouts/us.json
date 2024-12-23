@@ -1,5 +1,23 @@
 [
   [
+    { "name": "Esc", "id": "27", "length": 1 },
+    { "name": "", "id": "", "length": 1 },
+    { "name": "F1", "id": "112", "length": 1 },
+    { "name": "F2", "id": "113", "length": 1 },
+    { "name": "F3", "id": "114", "length": 1 },
+    { "name": "F4", "id": "115", "length": 1 },
+    { "name": "", "id": "", "length": 0.5 },
+    { "name": "F5", "id": "116", "length": 1 },
+    { "name": "F6", "id": "117", "length": 1 },
+    { "name": "F7", "id": "118", "length": 1 },
+    { "name": "F8", "id": "119", "length": 1 },
+    { "name": "", "id": "", "length": 0.5 },
+    { "name": "F9", "id": "120", "length": 1 },
+    { "name": "F10", "id": "121", "length": 1 },
+    { "name": "F11", "id": "122", "length": 1 },
+    { "name": "F12", "id": "123", "length": 1 }
+  ],
+  [
     { "name": "`", "id": "192", "length": 1 },
     { "name": "1", "id": "49", "length": 1 },
     { "name": "2", "id": "50", "length": 1 },
@@ -64,7 +82,7 @@
     { "name": "Ctrl", "id": "17", "length": 1.25 },
     { "name": "Win", "id": "91", "length": 1.25 },
     { "name": "Alt", "id": "18", "length": 1.25 },
-    { "name": "Space", "id": "32", "length": 6.25 },
+    { "name": "Space", "id": "32", "length": 6.6 },
     { "name": "Alt", "id": "18", "length": 1.25 },
     { "name": "Win", "id": "92", "length": 1.25 },
     { "name": "Menu", "id": "93", "length": 1.25 },
