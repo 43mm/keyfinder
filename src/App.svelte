@@ -28,16 +28,21 @@
 
   function saveCommand() {
     if (selectedKey) {
-      keyboardState.forEach((row, rowIndex) => {
-        row.forEach((key, keyIndex) => {
-          if (key.id === selectedKey?.id) {
-            keyboardState[rowIndex][keyIndex] = {
-              ...key,
-              command: currentCommand,
-            };
-          }
-        });
-      });
+      const rowIndex = keyboardState.findIndex((row) =>
+        row.some((key) => key.id === selectedKey?.id),
+      );
+      if (rowIndex !== -1) {
+        const keyIndex = keyboardState[rowIndex].findIndex(
+          (key) => key.id === selectedKey?.id,
+        );
+        const command = currentCommand.trim()
+          ? currentCommand.trim()
+          : undefined;
+        keyboardState[rowIndex][keyIndex] = {
+          ...keyboardState[rowIndex][keyIndex],
+          command,
+        };
+      }
     }
     open = false;
   }
@@ -55,16 +60,18 @@
             {:else}
               <Dialog.Trigger asChild let:builder>
                 <button
+                  id={String(key.id)}
                   use:builder.action
                   {...builder}
                   class="p-4 rounded text-s cursor-pointer hover:outline-2"
                   class:bg-gray-100={key.command == undefined}
                   class:bg-red-500={key.command}
+                  class:text-white={key.command}
                   class:text-left={key.alignLeft}
                   class:text-right={key.alignRight}
                   class:text-center={!key.alignLeft && !key.alignRight}
                   style="width: {key.length * 70}px;"
-                  id={String(key.id)}
+                  onclick={() => (selectedKey = key)}
                 >
                   {key.name}
                 </button>
@@ -76,9 +83,21 @@
       <Dialog.Portal>
         <Dialog.Overlay class="fixed inset-0 z-50 bg-black/80" />
         <Dialog.Content
-          class="fixed left-[50%] top-[50%] z-50 grid w-md max-w-lg translate-x-[-50%] translate-y-[-50%] bg-white p-6 rounded shadow"
-          >Command</Dialog.Content
-        >
+          class="fixed left-[50%] top-[50%] z-50 grid w-md max-w-lg translate-x-[-50%] translate-y-[-50%] bg-white p-6 rounded shadow font-mono"
+          ><input
+            id="command"
+            type="text"
+            bind:value={currentCommand}
+            class="w-full px-4 py-2 border rounded"
+            placeholder="Enter command..."
+          />
+          <div class="flex w-full justify-end">
+            <Dialog.Close
+              class="bg-gray-100 cursor-pointer px-4 py-2 mt-2 rounded"
+              onclick={saveCommand}>Save</Dialog.Close
+            >
+          </div>
+        </Dialog.Content>
       </Dialog.Portal>
     </Dialog.Root>
   </div>
