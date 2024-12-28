@@ -26,14 +26,19 @@
   let selectedKey: KeyState | null = $state(null);
   let currentCommand = $state("");
 
+  function setSelectedKey(key: KeyState) {
+    selectedKey = key;
+    currentCommand = key.command ?? "";
+  }
+
   function saveCommand() {
     if (selectedKey) {
       const rowIndex = keyboardState.findIndex((row) =>
-        row.some((key) => key.id === selectedKey?.id),
+        row.some((key) => key.id === selectedKey!.id),
       );
       if (rowIndex !== -1) {
         const keyIndex = keyboardState[rowIndex].findIndex(
-          (key) => key.id === selectedKey?.id,
+          (key) => key.id === selectedKey!.id,
         );
         const command = currentCommand.trim()
           ? currentCommand.trim()
@@ -45,6 +50,7 @@
       }
     }
     open = false;
+    currentCommand = "";
   }
 </script>
 
@@ -55,27 +61,26 @@
       {#each keyboardState as row}
         <div class="flex justify-between gap-x-1">
           {#each row as key}
-            {#if key.id == undefined}
-              <div class="" style="width: {key.length * 70}px;"></div>
-            {:else}
-              <Dialog.Trigger asChild let:builder>
-                <button
-                  id={String(key.id)}
-                  use:builder.action
-                  {...builder}
-                  class="p-4 rounded text-s cursor-pointer hover:outline-2"
-                  class:bg-gray-100={key.command == undefined}
-                  class:bg-red-500={key.command}
-                  class:text-white={key.command}
-                  class:text-left={key.alignLeft}
-                  class:text-right={key.alignRight}
-                  class:text-center={!key.alignLeft && !key.alignRight}
-                  style="width: {key.length * 70}px;"
-                  onclick={() => (selectedKey = key)}
-                >
-                  {key.name}
-                </button>
+            {#if key.id}
+              <Dialog.Trigger onclick={() => setSelectedKey(key)}>
+                {#snippet child({ props })}
+                  <button
+                    {...props}
+                    class="p-4 rounded text-s cursor-pointer hover:outline-2"
+                    class:bg-gray-100={key.command == undefined}
+                    class:bg-red-500={key.command}
+                    class:text-white={key.command}
+                    class:text-left={key.alignLeft}
+                    class:text-right={key.alignRight}
+                    class:text-center={!key.alignLeft && !key.alignRight}
+                    style="width: {key.length * 70}px;"
+                  >
+                    {key.name}
+                  </button>
+                {/snippet}
               </Dialog.Trigger>
+            {:else}
+              <div class="" style="width: {key.length * 70}px;"></div>
             {/if}
           {/each}
         </div>
@@ -92,10 +97,11 @@
             placeholder="Enter command..."
           />
           <div class="flex w-full justify-end">
-            <Dialog.Close
+            <button
               class="bg-gray-100 cursor-pointer px-4 py-2 mt-2 rounded"
-              onclick={saveCommand}>Save</Dialog.Close
-            >
+              onclick={saveCommand}
+              >Save
+            </button>
           </div>
         </Dialog.Content>
       </Dialog.Portal>
