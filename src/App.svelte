@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { Dialog } from "bits-ui";
+  import { Dialog, Tooltip } from "bits-ui";
   import USEnglish from "./layouts/us.json";
   import "./app.css";
 
@@ -55,56 +55,66 @@
 </script>
 
 <main class="grid place-items-center min-h-screen font-mono">
-  <div class="inline-flex flex-col gap-y-1">
-    <h1 class="text-4xl">keyfinder</h1>
-    <Dialog.Root bind:open>
-      {#each keyboardState as row}
-        <div class="flex justify-between gap-x-1">
-          {#each row as key}
-            {#if key.id}
-              <Dialog.Trigger onclick={() => setSelectedKey(key)}>
-                {#snippet child({ props })}
-                  <button
-                    {...props}
-                    class="p-4 rounded text-s cursor-pointer hover:outline-2"
-                    class:bg-gray-100={key.command == undefined}
-                    class:bg-red-500={key.command}
-                    class:text-white={key.command}
-                    class:text-left={key.alignLeft}
-                    class:text-right={key.alignRight}
-                    class:text-center={!key.alignLeft && !key.alignRight}
-                    style="width: {key.length * 70}px;"
-                  >
-                    {key.name}
-                  </button>
-                {/snippet}
-              </Dialog.Trigger>
-            {:else}
-              <div class="" style="width: {key.length * 70}px;"></div>
-            {/if}
-          {/each}
-        </div>
-      {/each}
-      <Dialog.Portal>
-        <Dialog.Overlay class="fixed inset-0 z-50 bg-black/80" />
-        <Dialog.Content
-          class="fixed left-[50%] top-[50%] z-50 grid w-md max-w-lg translate-x-[-50%] translate-y-[-50%] bg-white p-6 rounded shadow font-mono"
-          ><input
-            id="command"
-            type="text"
-            bind:value={currentCommand}
-            class="w-full px-4 py-2 border rounded"
-            placeholder="Enter command..."
-          />
-          <div class="flex w-full justify-end">
-            <button
-              class="bg-gray-100 cursor-pointer px-4 py-2 mt-2 rounded"
-              onclick={saveCommand}
-              >Save
-            </button>
+  <Tooltip.Provider delayDuration={0}>
+    <div class="inline-flex flex-col gap-y-1">
+      <h1 class="text-4xl">keyfinder</h1>
+      <Dialog.Root bind:open>
+        {#each keyboardState as row}
+          <div class="flex justify-between gap-x-1">
+            {#each row as key}
+              {#if key.id}
+                <Dialog.Trigger onclick={() => setSelectedKey(key)}>
+                  {#snippet child({ props: dialogProps })}
+                    <Tooltip.Root>
+                      <Tooltip.Trigger {...dialogProps}>
+                        {#snippet child({ props: tooltipProps })}
+                          <button
+                            {...tooltipProps}
+                            class="p-4 rounded text-s cursor-pointer hover:outline-2"
+                            class:bg-gray-100={key.command === undefined}
+                            class:bg-red-500={key.command}
+                            class:text-white={key.command}
+                            class:text-left={key.alignLeft}
+                            class:text-right={key.alignRight}
+                            class:text-center={!key.alignLeft &&
+                              !key.alignRight}
+                            style="width: {key.length * 70}px;"
+                          >
+                            {key.name}
+                          </button>
+                        {/snippet}
+                      </Tooltip.Trigger>
+                      <Tooltip.Content>{key.command}</Tooltip.Content>
+                    </Tooltip.Root>
+                  {/snippet}
+                </Dialog.Trigger>
+              {:else}
+                <div class="" style="width: {key.length * 70}px;"></div>
+              {/if}
+            {/each}
           </div>
-        </Dialog.Content>
-      </Dialog.Portal>
-    </Dialog.Root>
-  </div>
+        {/each}
+        <Dialog.Portal>
+          <Dialog.Overlay class="fixed inset-0 z-50 bg-black/80" />
+          <Dialog.Content
+            class="fixed left-[50%] top-[50%] z-50 grid w-md max-w-lg translate-x-[-50%] translate-y-[-50%] bg-white p-6 rounded shadow font-mono"
+            ><input
+              id="command"
+              type="text"
+              bind:value={currentCommand}
+              class="w-full px-4 py-2 border rounded"
+              placeholder="Enter command..."
+            />
+            <div class="flex w-full justify-end">
+              <button
+                class="bg-gray-100 cursor-pointer px-4 py-2 mt-2 rounded"
+                onclick={saveCommand}
+                >Save
+              </button>
+            </div>
+          </Dialog.Content>
+        </Dialog.Portal>
+      </Dialog.Root>
+    </div>
+  </Tooltip.Provider>
 </main>
