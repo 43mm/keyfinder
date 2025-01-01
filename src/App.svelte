@@ -65,7 +65,7 @@
               {#if key.id}
                 <Dialog.Trigger onclick={() => setSelectedKey(key)}>
                   {#snippet child({ props: dialogProps })}
-                    <Tooltip.Root>
+                    <Tooltip.Root disabled={!key.command}>
                       <Tooltip.Trigger {...dialogProps}>
                         {#snippet child({ props: tooltipProps })}
                           <button
@@ -84,7 +84,12 @@
                           </button>
                         {/snippet}
                       </Tooltip.Trigger>
-                      <Tooltip.Content>{key.command}</Tooltip.Content>
+                      <Tooltip.Content sideOffset={1}>
+                        <Tooltip.Arrow />
+                        <div class="p-4 border-2 bg-white rounded">
+                          {key.command}
+                        </div>
+                      </Tooltip.Content>
                     </Tooltip.Root>
                   {/snippet}
                 </Dialog.Trigger>
