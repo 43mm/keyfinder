@@ -70,14 +70,14 @@
                         {#snippet child({ props: tooltipProps })}
                           <button
                             {...tooltipProps}
-                            class="p-4 rounded text-s cursor-pointer hover:outline-2"
-                            class:bg-gray-100={key.command === undefined}
-                            class:bg-red-500={key.command}
-                            class:text-white={key.command}
-                            class:text-left={key.alignLeft}
-                            class:text-right={key.alignRight}
-                            class:text-center={!key.alignLeft &&
-                              !key.alignRight}
+                            class={{
+                              "p-4 rounded text-s cursor-pointer hover:outline-2": true,
+                              "bg-red-500 text-white": key.command,
+                              "bg-gray-100": !key.command,
+                              "text-left": key.alignLeft,
+                              "text-right": key.alignRight,
+                              "text-center": !key.alignLeft && !key.alignRight,
+                            }}
                             style="width: {key.length * 70}px;"
                           >
                             {key.name}
