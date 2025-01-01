@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { Dialog, Tooltip } from "bits-ui";
+  import { Dialog, ToggleGroup, Tooltip } from "bits-ui";
   import USEnglish from "./layouts/us.json";
   import "./app.css";
 
@@ -23,32 +23,21 @@
   const keyboardState: State = $state(currentLayout);
 
   let open = $state(false);
-  let selectedKey: KeyState | null = $state(null);
+  let currentRow = $state(0);
+  let currentKey = $state(0);
   let currentCommand = $state("");
 
-  function setSelectedKey(key: KeyState) {
-    selectedKey = key;
-    currentCommand = key.command ?? "";
+  function setPosition(rowIndex: number, keyIndex: number) {
+    currentRow = rowIndex;
+    currentKey = keyIndex;
   }
 
   function saveCommand() {
-    if (selectedKey) {
-      const rowIndex = keyboardState.findIndex((row) =>
-        row.some((key) => key.id === selectedKey!.id),
-      );
-      if (rowIndex !== -1) {
-        const keyIndex = keyboardState[rowIndex].findIndex(
-          (key) => key.id === selectedKey!.id,
-        );
-        const command = currentCommand.trim()
-          ? currentCommand.trim()
-          : undefined;
-        keyboardState[rowIndex][keyIndex] = {
-          ...keyboardState[rowIndex][keyIndex],
-          command,
-        };
-      }
-    }
+    const command = currentCommand.trim() ? currentCommand.trim() : undefined;
+    keyboardState[currentRow][currentKey] = {
+      ...keyboardState[currentRow][currentKey],
+      command,
+    };
     open = false;
     currentCommand = "";
   }
@@ -59,11 +48,11 @@
     <div class="inline-flex flex-col gap-y-1">
       <h1 class="text-4xl">keyfinder</h1>
       <Dialog.Root bind:open>
-        {#each keyboardState as row}
+        {#each keyboardState as row, rowIndex}
           <div class="flex justify-between gap-x-1">
-            {#each row as key}
+            {#each row as key, keyIndex}
               {#if key.id}
-                <Dialog.Trigger onclick={() => setSelectedKey(key)}>
+                <Dialog.Trigger onclick={() => setPosition(rowIndex, keyIndex)}>
                   {#snippet child({ props: dialogProps })}
                     <Tooltip.Root disabled={!key.command}>
                       <Tooltip.Trigger {...dialogProps}>
