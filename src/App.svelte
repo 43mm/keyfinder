@@ -20,26 +20,40 @@
     colour?: Colour;
   };
   type State = KeyState[][];
-  const keyboardState: State = $state(currentLayout);
+  let keyboardState: State = $state(currentLayout);
 
   let open = $state(false);
   let currentRow = $state(0);
-  let currentKey = $state(0);
+  let currentCol = $state(0);
   let currentCommand = $state("");
+  let currentColour: Colour = $state("slate");
+
+  const colourLookup: Record<Colour, string> = {
+    slate: "bg-slate-500",
+    red: "bg-red-500",
+    orange: "bg-orange-500",
+    lime: "bg-lime-500",
+    sky: "bg-sky-500",
+    violet: "bg-violet-500",
+  };
 
   function setPosition(rowIndex: number, keyIndex: number) {
     currentRow = rowIndex;
-    currentKey = keyIndex;
+    currentCol = keyIndex;
+
+    currentCommand = keyboardState[currentRow][currentCol].command ?? "";
+    currentColour = keyboardState[currentRow][currentCol].colour ?? "slate";
   }
 
-  function saveCommand() {
+  function saveKey() {
     const command = currentCommand.trim() ? currentCommand.trim() : undefined;
-    keyboardState[currentRow][currentKey] = {
-      ...keyboardState[currentRow][currentKey],
+    const newKey = {
+      ...keyboardState[currentRow][currentCol],
       command,
+      colour: currentColour,
     };
+    keyboardState[currentRow][currentCol] = newKey;
     open = false;
-    currentCommand = "";
   }
 </script>
 
@@ -92,7 +106,21 @@
           <Dialog.Overlay class="fixed inset-0 z-50 bg-black/80" />
           <Dialog.Content
             class="fixed left-[50%] top-[50%] z-50 grid w-md max-w-lg translate-x-[-50%] translate-y-[-50%] bg-white p-6 rounded shadow font-mono"
-            ><input
+          >
+            <ToggleGroup.Root
+              type="single"
+              bind:value={currentColour}
+              class="flex gap-1 mb-2"
+            >
+              {#each Object.entries(colourLookup) as [colour, style]}
+                <ToggleGroup.Item
+                  value={colour}
+                  class="size-4 {style} rounded data-[state=on]:outline-2 cursor-pointer"
+                  ><div></div></ToggleGroup.Item
+                >
+              {/each}
+            </ToggleGroup.Root>
+            <input
               id="command"
               type="text"
               bind:value={currentCommand}
@@ -102,7 +130,7 @@
             <div class="flex w-full justify-end">
               <button
                 class="bg-gray-100 cursor-pointer px-4 py-2 mt-2 rounded"
-                onclick={saveCommand}
+                onclick={saveKey}
                 >Save
               </button>
             </div>
