@@ -69,14 +69,19 @@
                         {#snippet child({ props: tooltipProps })}
                           <button
                             {...tooltipProps}
-                            class={{
-                              "p-4 rounded text-s cursor-pointer hover:outline-2": true,
-                              "bg-red-500 text-white": key.command,
-                              "bg-gray-100": !key.command,
-                              "text-left": key.alignLeft,
-                              "text-right": key.alignRight,
-                              "text-center": !key.alignLeft && !key.alignRight,
-                            }}
+                            class={[
+                              "p-4 rounded text-s cursor-pointer hover:outline-2",
+                              key.colour
+                                ? `${colourLookup[key.colour]} text-white`
+                                : key.command
+                                  ? `${colourLookup["slate"]} text-white`
+                                  : "bg-gray-100",
+                              key.alignLeft
+                                ? "text-left"
+                                : key.alignRight
+                                  ? "text-right"
+                                  : "text-center",
+                            ]}
                             style="width: {key.length * 70}px;"
                           >
                             {key.name}
@@ -106,7 +111,8 @@
             {#if currentKey}
               <ToggleGroup.Root
                 type="single"
-                bind:value={currentKey.colour}
+                bind:value={() => currentKey!.colour,
+                (v) => (currentKey!.colour = v ? v : undefined)}
                 class="flex gap-1 mb-2"
               >
                 {#each Object.entries(colourLookup) as [colour, style]}
@@ -120,7 +126,8 @@
               <input
                 id="command"
                 type="text"
-                bind:value={currentKey.command}
+                bind:value={() => currentKey!.command,
+                (v) => (currentKey!.command = v ? v : undefined)}
                 class="w-full px-4 py-2 border rounded"
                 placeholder="Enter command..."
               />
