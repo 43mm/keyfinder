@@ -1,13 +1,26 @@
 <script lang="ts">
+  import { onMount } from "svelte";
   import { Dialog, Tooltip } from "bits-ui";
   import type { Key, KeyState } from "./types";
   import KeyboardDialog from "./KeyboardDialog.svelte";
-  import { COLOUR_CLASS_MAP } from "./consts";
+  import { COLOUR_CLASS_MAP, STORAGE_KEY } from "./consts";
   import USEnglish from "./layouts/us.json";
   import "./app.css";
 
   const currentLayout: Key[][] = USEnglish;
-  let keyboardState: KeyState[][] = $state(currentLayout);
+
+  function loadInitialState(): KeyState[][] {
+    if (typeof window === "undefined") return currentLayout;
+
+    const savedLayout = localStorage.getItem(STORAGE_KEY);
+    return savedLayout ? JSON.parse(savedLayout) : currentLayout;
+  }
+
+  let keyboardState: KeyState[][] = $state(loadInitialState());
+  $effect(() => {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(keyboardState));
+  });
+
   let dialogOpen = $state(false);
   let currentKey: (KeyState & { position: [number, number] }) | undefined =
     $state();

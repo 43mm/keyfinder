@@ -1,5 +1,7 @@
 import type { Colour } from "./types";
 
+export const STORAGE_KEY = "keyboard";
+
 export const COLOUR_CLASS_MAP: Record<Colour, string> = {
   slate: "bg-slate-500",
   red: "bg-red-500",
