@@ -19,8 +19,10 @@
     {#if currentKey}
       <ToggleGroup.Root
         type="single"
-        bind:value={() => currentKey!.colour,
-        (v) => (currentKey!.colour = v ? v : undefined)}
+        bind:value={
+          () => currentKey!.colour,
+          (v) => (currentKey!.colour = v ? v : undefined)
+        }
         class="flex gap-1 mb-2"
       >
         {#each Object.entries(COLOUR_CLASS_MAP) as [colour, style]}
@@ -33,8 +35,10 @@
       <input
         id="command"
         type="text"
-        bind:value={() => currentKey!.command,
-        (v) => (currentKey!.command = v ? v : undefined)}
+        bind:value={
+          () => currentKey!.command,
+          (v) => (currentKey!.command = v ? v : undefined)
+        }
         class="w-full px-4 py-2 border rounded"
         placeholder="Enter command..."
       />

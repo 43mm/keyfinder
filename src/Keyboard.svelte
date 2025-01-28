@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { onMount } from "svelte";
   import { Dialog, Tooltip } from "bits-ui";
   import type { Key, KeyState } from "./types";
   import KeyboardDialog from "./KeyboardDialog.svelte";
