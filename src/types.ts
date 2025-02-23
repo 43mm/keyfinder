@@ -1,3 +1,5 @@
+export type KeyboardLayout = "US English";
+
 export type Key = {
   id?: number;
   name?: string;
@@ -13,7 +15,7 @@ export type KeyState = Key & {
   colour?: Colour;
 };
 
-export type SavedKeyboard = {
+export type NamedKeyboard = {
   name: string;
   data: KeyState[][];
 };

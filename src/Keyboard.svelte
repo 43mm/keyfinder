@@ -1,21 +1,19 @@
 <script lang="ts">
+  import { getContext } from "svelte";
   import { Dialog, Tooltip } from "bits-ui";
-  import type { KeyState } from "./types";
   import KeyboardDialog from "./KeyboardDialog.svelte";
+  import type { KeyState, NamedKeyboard } from "./types";
   import { COLOUR_CLASS_MAP, STORAGE_KEY } from "./consts";
   import "./app.css";
-  import { keyboards } from "./keyboards.svelte";
 
-  $effect(() => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(keyboards));
-  });
+  const keyboard = getContext<NamedKeyboard[]>(STORAGE_KEY)[0];
 
   let currentKey: (KeyState & { position: [number, number] }) | undefined =
     $state();
 
   function setPosition(rowIndex: number, keyIndex: number) {
     currentKey = {
-      ...keyboards[0].data[rowIndex][keyIndex],
+      ...keyboard.data[rowIndex][keyIndex],
       position: [rowIndex, keyIndex],
     };
   }
@@ -26,12 +24,12 @@
       position: [rowIndex, keyIndex],
       ...newKey
     } = currentKey;
-    keyboards[0].data[rowIndex][keyIndex] = newKey;
+    keyboard.data[rowIndex][keyIndex] = newKey;
   }
 </script>
 
 <Dialog.Root>
-  {#each keyboards[0].data as row, rowIndex}
+  {#each keyboard.data as row, rowIndex}
     <div class="flex justify-between gap-x-1">
       {#each row as key, keyIndex}
         {#if key.id}
@@ -71,7 +69,7 @@
             {/snippet}
           </Dialog.Trigger>
         {:else}
-          <div class="" style="width: {key.length * 70}px;"></div>
+          <div style="width: {key.length * 70}px;"></div>
         {/if}
       {/each}
     </div>
