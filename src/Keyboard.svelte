@@ -10,7 +10,6 @@
     localStorage.setItem(STORAGE_KEY, JSON.stringify(keyboards));
   });
 
-  let dialogOpen = $state(false);
   let currentKey: (KeyState & { position: [number, number] }) | undefined =
     $state();
 
@@ -28,11 +27,10 @@
       ...newKey
     } = currentKey;
     keyboards[0].data[rowIndex][keyIndex] = newKey;
-    dialogOpen = false;
   }
 </script>
 
-<Dialog.Root bind:open={dialogOpen}>
+<Dialog.Root>
   {#each keyboards[0].data as row, rowIndex}
     <div class="flex justify-between gap-x-1">
       {#each row as key, keyIndex}
