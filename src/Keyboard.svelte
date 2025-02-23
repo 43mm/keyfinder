@@ -1,23 +1,13 @@
 <script lang="ts">
   import { Dialog, Tooltip } from "bits-ui";
-  import type { Key, KeyState } from "./types";
+  import type { KeyState } from "./types";
   import KeyboardDialog from "./KeyboardDialog.svelte";
   import { COLOUR_CLASS_MAP, STORAGE_KEY } from "./consts";
-  import USEnglish from "./layouts/us.json";
   import "./app.css";
+  import { keyboards } from "./keyboards.svelte";
 
-  const currentLayout: Key[][] = USEnglish;
-
-  function loadInitialState(): KeyState[][] {
-    if (typeof window === "undefined") return currentLayout;
-
-    const savedLayout = localStorage.getItem(STORAGE_KEY);
-    return savedLayout ? JSON.parse(savedLayout) : currentLayout;
-  }
-
-  let keyboardState: KeyState[][] = $state(loadInitialState());
   $effect(() => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(keyboardState));
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(keyboards));
   });
 
   let dialogOpen = $state(false);
@@ -26,7 +16,7 @@
 
   function setPosition(rowIndex: number, keyIndex: number) {
     currentKey = {
-      ...keyboardState[rowIndex][keyIndex],
+      ...keyboards[0].data[rowIndex][keyIndex],
       position: [rowIndex, keyIndex],
     };
   }
@@ -37,13 +27,13 @@
       position: [rowIndex, keyIndex],
       ...newKey
     } = currentKey;
-    keyboardState[rowIndex][keyIndex] = newKey;
+    keyboards[0].data[rowIndex][keyIndex] = newKey;
     dialogOpen = false;
   }
 </script>
 
 <Dialog.Root bind:open={dialogOpen}>
-  {#each keyboardState as row, rowIndex}
+  {#each keyboards[0].data as row, rowIndex}
     <div class="flex justify-between gap-x-1">
       {#each row as key, keyIndex}
         {#if key.id}

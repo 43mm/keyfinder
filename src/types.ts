@@ -12,3 +12,8 @@ export type KeyState = Key & {
   command?: string;
   colour?: Colour;
 };
+
+export type SavedKeyboard = {
+  name: string;
+  data: KeyState[][];
+};
