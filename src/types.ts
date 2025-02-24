@@ -1,4 +1,7 @@
 export type KeyboardLayout = "US English";
+export type LayoutState = {
+  current: KeyboardLayout;
+};
 
 export type Key = {
   id?: number;
@@ -18,4 +21,8 @@ export type KeyState = Key & {
 export type NamedKeyboard = {
   name: string;
   data: KeyState[][];
+};
+
+export type KeyboardState = {
+  data: NamedKeyboard[];
 };

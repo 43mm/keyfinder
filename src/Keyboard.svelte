@@ -2,11 +2,12 @@
   import { getContext } from "svelte";
   import { Dialog, Tooltip } from "bits-ui";
   import KeyboardDialog from "./KeyboardDialog.svelte";
-  import type { KeyState, NamedKeyboard } from "./types";
+  import type { KeyboardState, KeyState } from "./types";
   import { COLOUR_CLASS_MAP, STORAGE_KEY } from "./consts";
   import "./app.css";
 
-  const keyboard = getContext<NamedKeyboard[]>(STORAGE_KEY)[0];
+  const keyboards = getContext<KeyboardState>(STORAGE_KEY);
+  const keyboard = $derived(keyboards.data[0]);
 
   let currentKey: (KeyState & { position: [number, number] }) | undefined =
     $state();
